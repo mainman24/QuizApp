@@ -1,0 +1,11 @@
+{{ question }}
+<form action="{% url 'quizapps:results' question.id %}" method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button name="submit">Submit</button>
+</form>
+{% if question.isnotlastquestion == True %}
+	<a href="{% url 'quizapps:question' question.id|add:'1'  %}">Next</a>
+{% else %}
+	<a href="{% url 'quizapps:index' %}">Next</a>
+{% endif %}
