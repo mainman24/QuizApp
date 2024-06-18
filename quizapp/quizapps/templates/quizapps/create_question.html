@@ -1,0 +1,7 @@
+<form action="{% url 'quizapps:create_question' %}" method="POST">
+	{% csrf_token %}
+	{{ qz_form.as_p }}
+	{{ q_form.as_p }}
+	{{ c_form.as_p }}
+	<button name="submit">Submit</button>
+</form>

@@ -5,7 +5,7 @@
 	<button name="submit">Submit</button>
 </form>
 {% if question.isnotlastquestion == True %}
-	<a href="{% url 'quizapps:question' question.id|add:'1'  %}">Next</a>
+	<a href="{% url 'quizapps:question' question.returnnextquestionid  %}">Next</a>
 {% else %}
 	<a href="{% url 'quizapps:index' %}">Next</a>
 {% endif %}

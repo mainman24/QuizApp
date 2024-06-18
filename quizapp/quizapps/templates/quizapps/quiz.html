@@ -1,0 +1,3 @@
+{% for question in questions %}
+	<a href="{% url 'quizapps:question' question.id %}"> {{ question }} </a>
+{% endfor %}
