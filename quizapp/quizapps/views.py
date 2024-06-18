@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
 from .forms import *
+from django.forms import modelformset_factory
 # Create your views here.
 
 # Global Variables
@@ -38,32 +39,41 @@ def results(request, question_id):  # Maybe add quiz id of results replace to qu
     choice_id = request.POST['Choice']
     choice = Choice.objects.get(id=choice_id)
 
-    if choice.correct_choice():
-        score += 1
+    # if choice.correct_choice():
+    #    score += 1
 
     context = {'choice': choice}
     return render(request, 'quizapps/results.html', context)
 
+# create a view for making questions
 
-def create_question(request):
 
+def create_question(request):  # Maybe make it such that it is for a quiz
+    ChoiceFormSet = modelformset_factory(Choice, fields=('choice_text', 'correct_choice'), extra=4)
     if request.method != 'POST':
         qz_form = QuizForm()
         q_form = QuestionForm()
-        c_form = ChoiceForm()
+        c_form = ChoiceFormSet(queryset=Choice.objects.none())
+        # for edit use queryset such that it filters to the question__id = questoin.id
     else:
         qz_form = QuizForm(data=request.POST)
         q_form = QuestionForm(data=request.POST)
-        c_form = ChoiceForm(data=request.POST)
+        c_form = ChoiceFormSet(data=request.POST)
 
         if all([qz_form.is_valid(), q_form.is_valid(), c_form.is_valid()]):
             qz = qz_form.save()
             q = q_form.save(commit=False)
             c = c_form.save(commit=False)
             q.quiz = qz
-            c.question = q
-            q = q.save()
-            c_form.save()
+            print(c)
+            q.save()
+            for form in c:
+                #print(instance.question, q)
+                # print(form)
+                form.question = q
+                form.save()
+
+            # c_form.save()
 
     context = {'qz_form': qz_form, 'q_form': q_form, 'c_form': c_form}
     return render(request, 'quizapps/create_question.html', context)

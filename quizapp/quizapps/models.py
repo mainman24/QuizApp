@@ -49,7 +49,7 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.TextField()
+    choice_text = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
     correct_choice = models.BooleanField(default=False)
 #    marks = models.IntegerField the marks to be added if correct
