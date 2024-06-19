@@ -1,3 +1,6 @@
+<a href="{% url 'quizapps:create_quiz' %}">Create Quiz</a>
+<br >
+<br >
 {% for quiz in quizs %}
 	<a href="{% url 'quizapps:quiz' quiz.id %}"> {{ quiz }} </a>
 {% endfor %}

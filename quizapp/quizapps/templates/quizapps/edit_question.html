@@ -1,4 +1,4 @@
-<form action="{% url 'quizapps:create_question' quiz.id %}" method="POST">
+<form action="{% url 'quizapps:edit_question' question.id %}" method="POST">
 	{% csrf_token %}
 	<!--{{ qz_form.as_p }}-->
 	{{ q_form.as_p }}

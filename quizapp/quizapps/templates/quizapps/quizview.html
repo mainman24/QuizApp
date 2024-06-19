@@ -1,0 +1,10 @@
+{{ quiz }}
+{% for question in questions %}
+	<p>{{ question }}</p> - <a href="{% url 'quizapps:edit_question' question.id %}">Edit</a>
+	<ul>
+	{% for choice in question.choice_set.all %}
+		<li>{{choice}}</li>
+	{% endfor %}
+	</ul>
+{% endfor %}
+<a href="{% url 'quizapps:quiz' quiz.id %}">{{ quiz }}</a>
