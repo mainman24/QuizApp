@@ -92,8 +92,10 @@ def create_question(request, quiz_id):  # Maybe make it such that it is for a qu
             # qz = qz_form.save()
             q = q_form.save(commit=False)
             c = c_form.save(commit=False)
+            # Assigning Quiz to Question
             q.quiz = Quizs.objects.get(id=quiz_id)
             print(c)
+            # non commit false returns None
             q.save()
             for form in c:
                 # print(instance.question, q)
@@ -122,7 +124,7 @@ def edit_question(request, question_id):  # Maybe make it such that it is for a 
         # qz_form = QuizForm(data=request.POST)
         q_form = QuestionForm(data=request.POST, instance=question)
         c_form = ChoiceFormSet(data=request.POST, queryset=Choice.objects.filter(question=question))
-
+        # print(c_form)
         # if all([qz_form.is_valid(), q_form.is_valid(), c_form.is_valid()]):
         if all([q_form.is_valid(), c_form.is_valid()]):
             # qz = qz_form.save()
@@ -137,6 +139,8 @@ def edit_question(request, question_id):  # Maybe make it such that it is for a 
                 form.question = q
                 form.save()
             return redirect('quizapps:quizview', question.quiz.id)
+        else:
+            print(c_form.errors)
 
             # c_form.save()
     # quiz = Quizs.objects.get(id=quiz_id)
@@ -150,3 +154,15 @@ def quizview(request, quiz_id):
     questions = quiz.question_set.all()
     context = {'quiz': quiz, 'questions': questions}
     return render(request, 'quizapps/quizview.html', context)
+
+
+def delete_question(request, question_id):
+    question = Question.objects.get(id=question_id)
+    question.delete()
+    return redirect('quizapps:quizview', question.quiz.id)
+
+
+def delete_quiz(request, quiz_id):
+    quiz = Quizs.objects.get(id=quiz_id)
+    quiz.delete()
+    return redirect('quizapps:index')

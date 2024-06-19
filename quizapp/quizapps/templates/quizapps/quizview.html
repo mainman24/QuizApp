@@ -1,11 +1,15 @@
 <a href="{% url 'quizapps:quiz' quiz.id %}">{{ quiz }}</a>
-<br>
-<br>
-{% for question in questions %}
-	<a>{{ question }}</a> - <a href="{% url 'quizapps:edit_question' question.id %}">Edit</a>
-	<ul>
-	{% for choice in question.choice_set.all %}
-		<li>{{choice}}</li>
+{% if questions %}
+	<br>
+	<br>
+	{% for question in questions %}
+		<a>Q.{{ question.returncurrentid }}) {{ question }}</a> - <a href="{% url 'quizapps:edit_question' question.id %}">Edit</a> - <a href="{% url 'quizapps:delete_question' question.id %}">Delete</a>
+		<ul>
+		{% for choice in question.choice_set.all %}
+			<li>{{choice}}</li>
+		{% endfor %}
+		</ul>
 	{% endfor %}
-	</ul>
-{% endfor %}
+{% else %}
+	<p> No Questions Created </p>
+{% endif %}

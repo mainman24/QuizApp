@@ -1,4 +1,4 @@
-<p>Q.{{ question.returncurrentid }}) {{ question }}</p>
+<p style="height:15px;">Q.{{ question.returncurrentid }}) {{ question }}</p>
 <form action="{% url 'quizapps:results' question.id %}" method="POST">
 	{% csrf_token %}
 	{{ form.as_p }}

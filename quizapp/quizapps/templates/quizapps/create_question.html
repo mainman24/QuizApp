@@ -1,7 +1,17 @@
+<h1>Create Question:</h1>
 <form action="{% url 'quizapps:create_question' quiz.id %}" method="POST">
 	{% csrf_token %}
 	<!--{{ qz_form.as_p }}-->
+
 	{{ q_form.as_p }}
-	{{ c_form.as_p }}
+	<!--https://stackoverflow.com/questions/53933638/why-use-management-form-inside-template-->
+	{{ c_form.management_form }}
+	{% for form in c_form %}
+		{{ form.choice_text.label_tag }} {{ form.choice_text }} {{ form.correct_choice.label_tag }} {{ form.correct_choice }}
+		<br>
+	{% endfor %}
+	<br>
+
+	<!--{{ c_form.as_p }}-->
 	<button name="submit">Submit</button>
 </form>

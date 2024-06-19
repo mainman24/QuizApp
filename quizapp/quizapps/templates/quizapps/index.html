@@ -1,6 +1,8 @@
+<a href="{% url 'quizapps:index' %}"> Index </a> - 
 <a href="{% url 'quizapps:create_quiz' %}">Create Quiz</a>
-<br >
-<br >
+<p style="line-height:0px;">The following quizzes have been created :</p>
+<ul>
 {% for quiz in quizs %}
-	<a href="{% url 'quizapps:quiz' quiz.id %}"> {{ quiz }} </a><br>
+	<li><a href="{% url 'quizapps:quiz' quiz.id %}"> {{ quiz }} </a></li>
 {% endfor %}
+</ul>
