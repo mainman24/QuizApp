@@ -46,6 +46,11 @@ class Question(models.Model):
         else:
             return True
 
+    def returncurrentid(self):
+        questions = list(self.quiz.question_set.all())
+        question_id = questions.index(self)
+        return question_id + 1
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

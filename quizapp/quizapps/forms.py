@@ -3,7 +3,7 @@ from .models import *
 
 
 class RadioChoiceForm(forms.Form):
-    Choice = forms.ChoiceField(widget=forms.RadioSelect())
+    Choice = forms.ChoiceField(widget=forms.RadioSelect(), label=False)
 
 
 # see form in django

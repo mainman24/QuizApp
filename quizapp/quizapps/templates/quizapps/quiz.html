@@ -1,9 +1,8 @@
-<a href="{% url 'quizapps:create_question' quiz.id %}"> Create New Questions </p>
-<a href="{% url 'quizapps:quizview' quiz.id %}"> QuizView </p>
-
+<a href="{% url 'quizapps:index' %}"> Index </a> - 
+<a href="{% url 'quizapps:create_question' quiz.id %}"> Create New Questions </a> -
+<a href="{% url 'quizapps:quizview' quiz.id %}"> QuizView </a>
+<br>
+<br>
 {% for question in questions %}
-	<a href="{% url 'quizapps:question' question.id %}"> {{ question }} </a>
+	<a href="{% url 'quizapps:question' question.id %}"> Q.{{ question.returncurrentid }}) {{ question }} </a><br>
 {% endfor %}
-<br>
-<br>
-<a href="{% url 'quizapps:index' %}"> Index </a>
