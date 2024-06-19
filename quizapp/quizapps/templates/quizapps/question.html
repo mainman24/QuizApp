@@ -7,5 +7,5 @@
 {% if question.isnotlastquestion == True %}
 	<a href="{% url 'quizapps:question' question.returnnextquestionid  %}">Next</a>
 {% else %}
-	<a href="{% url 'quizapps:index' %}">Next</a>
+	<a href="{% url 'quizapps:resultsquiz' question.quiz.id %}">Results</a>
 {% endif %}
