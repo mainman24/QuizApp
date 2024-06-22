@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from .models import *
 from .forms import *
 from django.forms import modelformset_factory
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 # Global Variables
@@ -12,20 +13,27 @@ score = 0
 def index(request):
     global score
     score = 0
-    quizs = Quizs.objects.all()
+    quizs = Quizs.objects.filter(owner=request.user.id)
     context = {'quizs': quizs}
     return render(request, 'quizapps/index.html', context)
 
 
+@login_required
 def quiz(request, quiz_id):
     quiz = Quizs.objects.get(id=quiz_id)
+    if quiz.owner != request.user:
+        raise Http404
     questions = quiz.question_set.all()
     context = {'questions': questions, 'quiz': quiz}
     return render(request, 'quizapps/quiz.html', context)
 
 
+@login_required
 def question(request, question_id):
     question = Question.objects.get(id=question_id)
+
+    if question.quiz.owner != request.user:
+        raise Http404
 
     CHOICES = question.genchoiceslist()
 
@@ -36,6 +44,7 @@ def question(request, question_id):
     return render(request, 'quizapps/question.html', context)
 
 
+@login_required
 def results(request, question_id):  # Maybe add quiz id of results replace to quiz id
     global score  # Must make it reset for each quiz
     choice_id = request.POST['Choice']
@@ -55,6 +64,7 @@ def results(request, question_id):  # Maybe add quiz id of results replace to qu
 # create a view for making questions
 
 
+@login_required
 def resultsquiz(request, quiz_id):
     global score
     quiz = Quizs.objects.get(id=quiz_id)
@@ -63,6 +73,7 @@ def resultsquiz(request, quiz_id):
     return render(request, 'quizapps/resultsquiz.html', context)
 
 
+@login_required
 def create_quiz(request):
     if request.method != 'POST':
         form = QuizForm()
@@ -75,7 +86,11 @@ def create_quiz(request):
     return render(request, 'quizapps/create_quiz.html', context)
 
 
+@login_required
 def create_question(request, quiz_id):  # Maybe make it such that it is for a quiz
+    quiz = Quizs.objects.get(id=quiz_id)
+    if quiz.owner != request.user:
+        raise Http404
     ChoiceFormSet = modelformset_factory(Choice, fields=('choice_text', 'correct_choice'), extra=4)
     if request.method != 'POST':
         # qz_form = QuizForm()
@@ -111,8 +126,11 @@ def create_question(request, quiz_id):  # Maybe make it such that it is for a qu
     return render(request, 'quizapps/create_question.html', context)
 
 
+@login_required
 def edit_question(request, question_id):  # Maybe make it such that it is for a quiz
     question = Question.objects.get(id=question_id)
+    if question.quiz.owner != request.user:
+        raise Http404
     ChoiceFormSet = modelformset_factory(Choice, fields=(
         'choice_text', 'correct_choice'), extra=4, max_num=4)
     if request.method != 'POST':
@@ -149,19 +167,24 @@ def edit_question(request, question_id):  # Maybe make it such that it is for a 
     return render(request, 'quizapps/edit_question.html', context)
 
 
+@login_required
 def quizview(request, quiz_id):
     quiz = Quizs.objects.get(id=quiz_id)
+    if quiz.owner != request.user:
+        raise Http404
     questions = quiz.question_set.all()
     context = {'quiz': quiz, 'questions': questions}
     return render(request, 'quizapps/quizview.html', context)
 
 
+@login_required
 def delete_question(request, question_id):
     question = Question.objects.get(id=question_id)
     question.delete()
     return redirect('quizapps:quizview', question.quiz.id)
 
 
+@login_required
 def delete_quiz(request, quiz_id):
     quiz = Quizs.objects.get(id=quiz_id)
     quiz.delete()

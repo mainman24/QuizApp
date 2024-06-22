@@ -1,0 +1,6 @@
+<form url="{% url 'users:register' %}" method="POST">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button name="submit">Submit</button>
+    <input name="next" value="{% url 'quizapps:index' %}" type="hidden" />
+</form>

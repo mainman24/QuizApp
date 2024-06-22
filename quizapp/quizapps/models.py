@@ -1,13 +1,27 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 # question.id|add:'1'
 
 
 class Quizs(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz_name = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
 # maybe add score to Quizs
+# {'question_name':[('Choice1', False) , ('Choice2', True) , ('Choice3', False) , (Choice4, False)]}
+
+    def createquizfromdict(self, dict):
+        for i in dict:
+            q = Question.objects.create(quiz=self, question_name=i)
+            #q.quiz_id = self.id
+            q.save()
+            for j in dict[i]:
+                c = Choice.objects.create(question=q, choice_text=j[0])
+                if j[1] == True:
+                    c.correct_choice = True
+                c.question = q
+                c.save()
 
     def __str__(self):
         return self.quiz_name
@@ -61,3 +75,16 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+class UserProfile(models.Model):
+    CHOICES = [
+        ("TR", "Teacher"),
+        ("ST", "Student")
+    ]
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=200, choices=CHOICES)
+
+    def __str__(self):
+        return self.owner + " , " + self.role
