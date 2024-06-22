@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(Question)
 admin.site.register(Choice)
 admin.site.register(Quizs)
+admin.site.register(UserProfile)

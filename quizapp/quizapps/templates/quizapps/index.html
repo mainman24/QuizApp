@@ -1,5 +1,6 @@
 <a href="{% url 'quizapps:index' %}"> Index </a> - 
 <a href="{% url 'quizapps:create_quiz' %}">Create Quiz</a> -
+
 {% if user.is_authenticated %}
 	<a>Hello {{ user.username }}</a>
 	<!--<a href="{% url 'users:logout' %}"> Log Out </a>-->

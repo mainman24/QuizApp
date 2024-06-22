@@ -83,8 +83,8 @@ class UserProfile(models.Model):
         ("ST", "Student")
     ]
 
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=200, choices=CHOICES)
 
     def __str__(self):
-        return self.owner + " , " + self.role
+        return str(self.owner) + "," + str(self.role)

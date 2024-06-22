@@ -1,7 +1,8 @@
 <a href="{% url 'quizapps:index' %}"> Index </a> - 
 <a href="{% url 'quizapps:create_question' quiz.id %}"> Create New Questions </a> -
 <a href="{% url 'quizapps:quizview' quiz.id %}"> QuizView </a> -
-<a href="{% url 'quizapps:delete_quiz' quiz.id %}"> Delete Quiz </a>
+<a href="{% url 'quizapps:delete_quiz' quiz.id %}"> Delete Quiz </a> -
+<a href="{% url 'quizapps:assign_quiz' quiz.id %}">Assign Quiz</a> 
 {% if questions %}
 	<br>
 	<br>

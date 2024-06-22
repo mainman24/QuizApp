@@ -3,7 +3,7 @@ from .models import *
 
 
 class RadioChoiceForm(forms.Form):
-    Choice = forms.ChoiceField(widget=forms.RadioSelect(), label=False)
+    Choice = forms.ChoiceField(widget=forms.RadioSelect(), label=False)  # label = False
 
 
 # see form in django
@@ -28,4 +28,10 @@ class ChoiceForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = "__all__"  # Change to only form
+        fields = ["role"]  # Change to only form
+
+# class MultipleUserForm():
+
+
+class MultipleUserForm(forms.Form):
+    MultipleUser = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(), label=False)

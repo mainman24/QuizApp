@@ -1,0 +1,6 @@
+<h1>Choose Students To Assign :</h1>
+<form action="{% url 'quizapps:assign_quiz' quiz.id %}" method='POST'>
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button name="Submit">Submit</button>
+</form>
