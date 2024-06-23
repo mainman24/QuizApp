@@ -1,4 +1,22 @@
+<head>
+	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+
+<style>
+
+label {
+  display: inline; /* This means all the labels are styled like this. */
+}
+
+input{
+	width:62%;
+}
+
+</style>
+<header>
 <h1>Edit Question:</h1>
+</header>
+<main>
 <form action="{% url 'quizapps:edit_question' question.id %}" method="POST">
 	{% csrf_token %}
 	<!--{{ qz_form.as_p }}-->
@@ -19,3 +37,4 @@
 	<br>
 	<button name="submit">Submit</button>
 </form>
+</main>

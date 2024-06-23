@@ -1,4 +1,21 @@
+<head>
+	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<header>
 <h1>Create Question:</h1>
+</header>
+<style>
+
+label {
+  display: inline; /* This means all the labels are styled like this. */
+}
+
+input{
+	width:62%;
+}
+
+</style>
+<main>
 <form action="{% url 'quizapps:create_question' quiz.id %}" method="POST">
 	{% csrf_token %}
 	<!--{{ qz_form.as_p }}-->
@@ -7,11 +24,14 @@
 	<!--https://stackoverflow.com/questions/53933638/why-use-management-form-inside-template-->
 	{{ c_form.management_form }}
 	{% for form in c_form %}
-		{{ form.choice_text.label_tag }} {{ form.choice_text }} {{ form.correct_choice.label_tag }} {{ form.correct_choice }}
-		<br>
+		<div class="sameline">
+			{{ form.choice_text.label_tag }} {{ form.choice_text }} {{ form.correct_choice.label_tag }} {{ form.correct_choice }}
+			<br>
+		</div>
 	{% endfor %}
 	<br>
 
 	<!--{{ c_form.as_p }}-->
 	<button name="submit">Submit</button>
+</main>
 </form>

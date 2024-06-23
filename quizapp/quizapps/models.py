@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Quizs(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ManyToManyField(User)
     quiz_name = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
 # maybe add score to Quizs
@@ -71,6 +71,7 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
     correct_choice = models.BooleanField(default=False)
+    #marks = models.IntegerField()
 #    marks = models.IntegerField the marks to be added if correct
 
     def __str__(self):
@@ -88,3 +89,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return str(self.owner) + "," + str(self.role)
+
+
+class Score(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quizs, on_delete=models.CASCADE)
+    score = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.owner) + "," + str(self.quiz) + "," + str(self.score)

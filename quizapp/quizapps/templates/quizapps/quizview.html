@@ -1,4 +1,14 @@
+<head>
+	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<header>
+	<nav>
+<a class="current" href="{% url 'quizapps:index' %}"> Index </a>
 <a href="{% url 'quizapps:quiz' quiz.id %}">{{ quiz }}</a>
+<a>Hello {{ user.username }}</a>
+</nav>
+</header>
+<main>
 {% if questions %}
 	<br>
 	<br>
@@ -13,3 +23,5 @@
 {% else %}
 	<p> No Questions Created </p>
 {% endif %}
+
+</main>

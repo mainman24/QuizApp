@@ -1,8 +1,18 @@
-<a href="{% url 'quizapps:index' %}"> Index </a> - 
-<a href="{% url 'quizapps:create_question' quiz.id %}"> Create New Questions </a> -
-<a href="{% url 'quizapps:quizview' quiz.id %}"> QuizView </a> -
-<a href="{% url 'quizapps:delete_quiz' quiz.id %}"> Delete Quiz </a> -
-<a href="{% url 'quizapps:assign_quiz' quiz.id %}">Assign Quiz</a> 
+<head>
+	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+
+<header>
+	<nav>
+	<a href="{% url 'quizapps:index' %}"> Index </a> 
+	<a href="{% url 'quizapps:create_question' quiz.id %}"> Create New Questions </a> 
+	<a href="{% url 'quizapps:quizview' quiz.id %}"> QuizView </a> 
+	<a href="{% url 'quizapps:delete_quiz' quiz.id %}"> Delete Quiz </a> 
+	<a href="{% url 'quizapps:assign_quiz' quiz.id %}">Assign Quiz</a> 
+	</nav>
+</header>
+
+<main>
 {% if questions %}
 	<br>
 	<br>
@@ -10,5 +20,6 @@
 		<a href="{% url 'quizapps:question' question.id %}"> Q.{{ question.returncurrentid }}) {{ question }} </a><br>
 	{% endfor %}
 {% else %}
-	<p> No Questions Created </p>
+	<p> No Questions Created. </p>
 {% endif %}
+</main>

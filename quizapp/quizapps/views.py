@@ -14,25 +14,31 @@ def index(request):
     global score
     score = 0
     quizs = Quizs.objects.filter(owner=request.user.id)
-    context = {'quizs': quizs}
+    user = request.user
+    context = {'quizs': quizs, 'user': user}
     return render(request, 'quizapps/index.html', context)
 
 
 @login_required
 def quiz(request, quiz_id):
     quiz = Quizs.objects.get(id=quiz_id)
-    if quiz.owner != request.user:
+    print(quiz.owner)
+    # for user in quiz.owner.all():
+    #    if user != request.user:
+    #print("1", user, )
+    #        raise Http404
+    if request.user not in quiz.owner.all():
         raise Http404
     questions = quiz.question_set.all()
     context = {'questions': questions, 'quiz': quiz}
     return render(request, 'quizapps/quiz.html', context)
 
 
-@ login_required
+@login_required
 def question(request, question_id):
     question = Question.objects.get(id=question_id)
 
-    if question.quiz.owner != request.user:
+    if request.user not in question.quiz.owner.all():
         raise Http404
 
     CHOICES = question.genchoiceslist()
@@ -44,7 +50,7 @@ def question(request, question_id):
     return render(request, 'quizapps/question.html', context)
 
 
-@ login_required
+@login_required
 def results(request, question_id):  # Maybe add quiz id of results replace to quiz id
     global score  # Must make it reset for each quiz
     choice_id = request.POST['Choice']
@@ -64,24 +70,40 @@ def results(request, question_id):  # Maybe add quiz id of results replace to qu
 # create a view for making questions
 
 
-@ login_required
+@login_required
 def resultsquiz(request, quiz_id):
     global score
     quiz = Quizs.objects.get(id=quiz_id)
     totalquestions = len(list(quiz.question_set.all()))
+    score_set = str(score)+"/"+str(totalquestions)
+    if request.user.userprofile.role == "ST":
+        score_obj = Score.objects.create(owner=request.user, quiz=quiz, score=score_set)
+        quiz.owner.remove(request.user)
+        score_obj.save()
     context = {'score': score, 'totalquestions': totalquestions}
     return render(request, 'quizapps/resultsquiz.html', context)
 
 
-@ login_required
+@login_required
 def create_quiz(request):
     if request.user.userprofile.role == "TR":
         if request.method != 'POST':
             form = QuizForm()
         else:
             form = QuizForm(data=request.POST)
+
             if form.is_valid():
-                form.save()
+                q_form = form.save(commit=False)
+                #user = request.user
+                # q_form.save_m2m()
+                # q_form.owner.set(User.objects.get(id=15))
+
+                form.save()  # This creates the object without user
+                form.save_m2m()
+
+                q_form.owner.add(request.user)
+                q_form.save()
+
             return redirect('quizapps:index')
         context = {'form': form}
         return render(request, 'quizapps/create_quiz.html', context)
@@ -89,12 +111,14 @@ def create_quiz(request):
         return HttpResponse("No Student Can Create Quiz!")
 
 
-@ login_required
+@login_required
 def create_question(request, quiz_id):  # Maybe make it such that it is for a quiz
     if request.user.userprofile.role == "TR":
         quiz = Quizs.objects.get(id=quiz_id)
-        if quiz.owner != request.user:
+
+        if request.user not in quiz.owner.all():
             raise Http404
+
         ChoiceFormSet = modelformset_factory(
             Choice, fields=('choice_text', 'correct_choice'), extra=4)
         if request.method != 'POST':
@@ -134,11 +158,11 @@ def create_question(request, quiz_id):  # Maybe make it such that it is for a qu
         return HttpResponse("No Student Can Create Question!")
 
 
-@ login_required
+@login_required
 def edit_question(request, question_id):  # Maybe make it such that it is for a quiz
     if request.user.userprofile.role == "TR":
         question = Question.objects.get(id=question_id)
-        if question.quiz.owner != request.user:
+        if request.user not in question.quiz.owner.all():
             raise Http404
         ChoiceFormSet = modelformset_factory(Choice, fields=(
             'choice_text', 'correct_choice'), extra=4, max_num=4)
@@ -179,21 +203,21 @@ def edit_question(request, question_id):  # Maybe make it such that it is for a 
         return HttpResponse("No Student Can Edit Question!")
 
 
-@ login_required
+@login_required
 def quizview(request, quiz_id):
     quiz = Quizs.objects.get(id=quiz_id)
-    if quiz.owner != request.user:
+    if request.user not in quiz.owner.all():
         raise Http404
     questions = quiz.question_set.all()
     context = {'quiz': quiz, 'questions': questions}
     return render(request, 'quizapps/quizview.html', context)
 
 
-@ login_required
+@login_required
 def delete_question(request, question_id):
     if request.user.userprofile.role == "TR":
         question = Question.objects.get(id=question_id)
-        if question.quiz.owner != request.user:
+        if request.user not in question.quiz.owner.all():
             raise Http404
         question.delete()
         return redirect('quizapps:quizview', question.quiz.id)
@@ -201,11 +225,11 @@ def delete_question(request, question_id):
         return HttpResponse("No Student Can Delete Question!")
 
 
-@ login_required
+@login_required
 def delete_quiz(request, quiz_id):
     if request.user.userprofile.role == "TR":
         quiz = Quizs.objects.get(id=quiz_id)
-        if quiz.owner != request.user:
+        if request.user not in quiz.owner.all():
             raise Http404
         quiz.delete()
         return redirect('quizapps:index')
@@ -213,7 +237,7 @@ def delete_quiz(request, quiz_id):
         return HttpResponse("No Student Can Delete Quiz!")
 
 
-@ login_required
+@login_required
 def assign_quiz(request, quiz_id):
     if request.user.userprofile.role == "TR":
         quiz = Quizs.objects.get(id=quiz_id)
@@ -224,7 +248,9 @@ def assign_quiz(request, quiz_id):
             if user.userprofile.role == "ST":
                 CHOICES.append((user.id, user))
 
-        if quiz.owner != request.user:
+        print(CHOICES)
+
+        if request.user not in quiz.owner.all():
             raise Http404
 
         if request.method != 'POST':
@@ -233,9 +259,13 @@ def assign_quiz(request, quiz_id):
         else:
             form = MultipleUserForm()
             form.fields['MultipleUser'].choices = CHOICES
-
-            for id in request.POST['MultipleUser']:
-                quiz.owner = User.objects.get(id=id)
+            print(request.POST)
+            print(request.POST['MultipleUser'])
+            for id in dict(request.POST)['MultipleUser']:  # requires more than one user
+                # print(id)
+                quiz.owner.add(User.objects.get(id=id))
+                quiz.save()
+            return redirect('quizapps:quiz', quiz.id)
 
             # print(request.POST)
 
@@ -249,5 +279,36 @@ def assign_quiz(request, quiz_id):
         context = {'form': form, 'quiz': quiz}
         return render(request, 'quizapps/assign_quiz.html', context)
     else:
-
         return HttpResponse("No Student Can Assign Quiz!")
+
+
+@login_required
+def reportcard(request):
+    if request.user.userprofile.role == "ST":
+        scores = Score.objects.filter(owner=request.user)
+        context = {'scores': scores}
+        return render(request, 'quizapps/reportcard.html', context)
+
+    else:
+        '''
+        student_users = []
+        quizs = Quizs.objects.filter(owner=request.user)  # quiz made by teacher user
+        for quiz in quizs:
+            print(quiz)
+            for user in quiz.owner.all():
+                if user.userprofile.role == "ST":
+                    student_users.append(quiz.owner)
+        print(student_users)
+        '''
+        scores = []
+        user_list = []
+        for score in Score.objects.all():
+            for owner in score.quiz.owner.all():
+                if owner == request.user:
+                    scores.append(score)
+        user = request.user
+        for score in scores:
+            user_list.append(score.owner)
+        user_list = list(set(user_list))
+        context = {'scores': scores, 'user': user, 'user_list': user_list}
+        return render(request, 'quizapps/reportcard.html', context)

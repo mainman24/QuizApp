@@ -1,3 +1,10 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<header>
+    <h1> Register User </h1>
+</header>
+<main>
 <form url="{% url 'users:register' %}" method="POST">
     {{ form.as_p }}
     {{ u_form.as_p }}
@@ -5,3 +12,4 @@
     <button name="submit">Submit</button>
     <input name="next" value="{% url 'quizapps:index' %}" type="hidden" />
 </form>
+</main>

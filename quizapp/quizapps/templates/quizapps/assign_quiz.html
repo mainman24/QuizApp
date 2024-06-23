@@ -1,6 +1,14 @@
-<h1>Choose Students To Assign :</h1>
+<head>
+	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<header>
+<h1>Assign Quiz</h1>
+</header>
+<main>
+<p>Choose students to assign {{quiz}} to :</p>
 <form action="{% url 'quizapps:assign_quiz' quiz.id %}" method='POST'>
 	{% csrf_token %}
 	{{ form.as_p }}
 	<button name="Submit">Submit</button>
 </form>
+</main>

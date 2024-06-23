@@ -1,5 +1,14 @@
+<head>
+	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<header>
+    <h1> Create Quiz </h1>
+</header>
+<main>
+
 <form action="{% url 'quizapps:create_quiz' %}" method="POST">
 	{% csrf_token %}
 	{{ form.as_p }}
 	<button name="submit">Submit</button>
 </form>
+</main>

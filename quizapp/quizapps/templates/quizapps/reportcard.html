@@ -1,0 +1,30 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<header>
+    <h1> Report Card </h1>
+</header>
+<main>
+{% if user.userprofile.role == "ST" %}
+	{% for score in scores %}
+		{{ score.quiz }} - {{ score.score }} - {{ score.date }}
+		<br>
+	{% endfor %}
+{% else %}
+<!--
+	{% for score in scores %}
+		{{ score.owner }} <br> {{ score.quiz }} - {{ score.score }} - {{ score.date }}
+		<br>
+	{% endfor %}
+-->
+	{% for user in user_list %}
+		{{ user }}<br> 
+		{% for score in user.score_set.all %}
+			{{ score.quiz }} - {{ score.score }} - {{ score.date }}
+		<br>
+		{% endfor %}
+		<br>
+	{% endfor %}
+
+{% endif %}
+</main>

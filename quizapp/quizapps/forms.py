@@ -10,7 +10,7 @@ class RadioChoiceForm(forms.Form):
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quizs
-        fields = '__all__'  # change to only quiz_name
+        fields = ['quiz_name']  # change to only quiz_name
 
 
 class QuestionForm(forms.ModelForm):
