@@ -15,12 +15,7 @@ def register(request):
         if form.is_valid() and u_form.is_valid():
             new_user = form.save(commit=False)
             user_profile = u_form.save(commit=False)
-            # form.save()
-            print(u_form)
-            print()
-            print(new_user)
             user_profile.owner = new_user  # save the non commit instance not the form
-            #new_user = form.save()
             new_user.save()  # save the non commit instance not the form
             user_profile.save()
             login(request, new_user)

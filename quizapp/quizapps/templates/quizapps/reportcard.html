@@ -1,29 +1,45 @@
 <head>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
+
 <header>
     <h1> Report Card </h1>
 </header>
+
 <main>
 {% if user.userprofile.role == "ST" %}
+	<table>
+		<tr>
+	    <th>Quiz</th>
+	    <th>Score</th>
+	    <th>Date</th>
+	  </tr>
 	{% for score in scores %}
-		{{ score.quiz }} - {{ score.score }} - {{ score.date }}
-		<br>
+	  <tr>
+	    <th>{{ score.quiz }}</th>
+	    <th>{{ score.score }}</th>
+	    <th>{{ score.date }}</th>
+	  </tr>
 	{% endfor %}
+	</table> 
 {% else %}
-<!--
-	{% for score in scores %}
-		{{ score.owner }} <br> {{ score.quiz }} - {{ score.score }} - {{ score.date }}
-		<br>
-	{% endfor %}
--->
 	{% for user in user_list %}
-		{{ user }}<br> 
+		<h5>{{ user }}</h5>
+		<table>
+			<tr>
+			    <th>Quiz</th>
+			    <th>Score</th>
+			    <th>Date</th>
+			</tr>
 		{% for score in user.score_set.all %}
-			{{ score.quiz }} - {{ score.score }} - {{ score.date }}
-		<br>
+		  <tr>
+		    <th>{{ score.quiz }}</th>
+		    <th>{{ score.score }}</th>
+		    <th>{{ score.date }}</th>
+		  </tr>
 		{% endfor %}
-		<br>
+		</table> 
+		
 	{% endfor %}
 
 {% endif %}

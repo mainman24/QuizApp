@@ -1,6 +1,7 @@
 <head>
 	<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
+
 <main>
 <p style="height:15px;">Q.{{ question.returncurrentid }}) {{ question }}</p>
 <form action="{% url 'quizapps:results' question.id %}" method="POST"> 
